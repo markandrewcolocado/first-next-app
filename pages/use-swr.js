@@ -30,7 +30,7 @@ function LastSalesSWR() {
     return <p>Failed to load.</p>;
   }
 
-  if (!data || !sales) {
+  if (isLoading || !sales) {
     return <p>Loading...</p>;
   }
 
