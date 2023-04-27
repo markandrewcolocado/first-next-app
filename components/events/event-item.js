@@ -7,12 +7,15 @@ import ArrowRightIcon from "../icons/arrow-right-icon";
 
 function EventItem(props) {
   const { title, image, date, location, id } = props;
+  let formattedAddress = "";
   const humanReadableDate = new Date(date).toLocaleDateString("en-US", {
     day: "numeric",
     month: "long",
     year: "numeric",
   });
-  const formattedAddress = location.replace(", ", "\n");
+  if (location) {
+    formattedAddress = location.replace(", ", "\n");
+  }
   const exploreLink = `/events/${id}`;
 
   return (
