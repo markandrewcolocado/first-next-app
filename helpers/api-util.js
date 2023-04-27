@@ -16,7 +16,6 @@ export async function getAllEvents() {
           ...data[key],
         });
       }
-      console.log(data);
       return events;
     })
     .catch((error) => {

@@ -11,6 +11,7 @@ function HomePage(props) {
     <div>
       <Head>
         <title>NextJS Events</title>
+        {/* What shows in the search results */}
         <meta
           name="description"
           content="Find a lot of events that allow you to evolve."
