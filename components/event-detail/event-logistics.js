@@ -3,6 +3,7 @@ import AddressIcon from "../icons/address-icon";
 import DateIcon from "../icons/date-icon";
 import LogisticsItem from "./logistics-item";
 import styles from "./event-logistics.module.css";
+import Image from "next/image";
 
 function EventLogistics(props) {
   const { date, address, image, imageAlt } = props;
@@ -17,7 +18,7 @@ function EventLogistics(props) {
   return (
     <section className={styles.logistics}>
       <div className={styles.image}>
-        <img src={`/${image}`} alt={imageAlt} />
+        <Image src={`/${image}`} alt={imageAlt} width="500" height="500" />
       </div>
       <ul className={styles.list}>
         <LogisticsItem icon={DateIcon}>

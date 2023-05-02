@@ -20,7 +20,8 @@ function EventItem(props) {
 
   return (
     <li className={styles.item}>
-      <Image src={`/${image}`} alt={title} width="500" height="500" />
+      {/* Using the Image import will optimize the images, changing to better file size and file format */}
+      <Image src={`/${image}`} alt={title} width="250" height="160" />
       <div className={styles.content}>
         <div className={styles.summary}>
           <h2>{title}</h2>
