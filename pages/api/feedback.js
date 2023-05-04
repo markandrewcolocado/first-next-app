@@ -1,11 +1,11 @@
 import fs from "fs";
 import path from "path";
 
-function buildFeedbackPath() {
+export function buildFeedbackPath() {
   return path.join(process.cwd(), "data", "feedback.json");
 }
 
-function extractFeedbackData(filePath) {
+export function extractFeedbackData(filePath) {
   const fileData = fs.readFileSync(filePath);
   let data = [];
   // check if the file has no data in it before parsing to avoid Unexpected end of JSON file error
