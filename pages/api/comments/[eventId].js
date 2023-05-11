@@ -54,7 +54,12 @@ async function handler(req, res) {
     // const db = client.db();
     let documents;
     try {
-      documents = await getAllDocuments(client, "comments", { _id: -1 });
+      documents = await getAllDocuments(
+        client,
+        "comments",
+        { _id: -1 },
+        { eventId: eventId }
+      );
       res.status(200).json({ comments: documents });
     } catch (error) {
       res.status(500).json({ message: "Error in fetching comments." });
