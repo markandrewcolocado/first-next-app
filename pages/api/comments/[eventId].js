@@ -1,13 +1,20 @@
-import { MongoClient } from "mongodb";
+import {
+  connectDatabase,
+  getAllDocuments,
+  insertDocument,
+} from "../../../helpers/db-util";
 
 async function handler(req, res) {
   const eventId = req.query.eventId;
+  let client;
 
-  // Connect to MongoDB
-  const client = await MongoClient.connect(
-    // newsletter will be the name of the database
-    "mongodb+srv://mark05:A6815869193@project1.sbdoj8d.mongodb.net/events?retryWrites=true&w=majority"
-  );
+  try {
+    // Connect to MongoDB
+    client = await connectDatabase();
+  } catch (error) {
+    res.status(500).json({ message: "Cannot connect to the database!" });
+    return;
+  }
 
   if (req.method === "POST") {
     const email = req.body.email;
@@ -22,6 +29,7 @@ async function handler(req, res) {
       text.trim() === ""
     ) {
       res.status(422).json({ message: "Invalid input." });
+      client.close();
       return;
     }
 
@@ -32,26 +40,28 @@ async function handler(req, res) {
       eventId,
     };
 
-    const db = client.db();
-    const result = await db.collection("comments").insertOne(newComment);
-    newComment.id = result.insertedId;
-
-    console.log(result);
-
-    res.status(201).json({ message: "Added comment.", comment: newComment });
+    try {
+      const result = await insertDocument(client, "comments", newComment);
+      newComment._id = result.insertedId;
+      console.log(result);
+      res.status(201).json({ message: "Added comment.", comment: newComment });
+    } catch (error) {
+      res.status(500).json({ message: "Adding comment failed." });
+    }
   }
 
   if (req.method === "GET") {
-    const db = client.db();
-    const documents = await db
-      .collection("comments")
-      .find()
-      .sort({ _id: -1 })
-      .toArray();
-
-    res.status(200).json({ comments: documents });
+    // const db = client.db();
+    let documents;
+    try {
+      documents = await getAllDocuments(client, "comments", { _id: -1 });
+      res.status(200).json({ comments: documents });
+    } catch (error) {
+      res.status(500).json({ message: "Error in fetching comments." });
+    }
   }
 
+  // Don't forget to close the Mongodb connection
   client.close();
 }
 
