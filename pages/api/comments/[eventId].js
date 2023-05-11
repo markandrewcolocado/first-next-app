@@ -1,5 +1,13 @@
-function handler(req, res) {
+import { MongoClient } from "mongodb";
+
+async function handler(req, res) {
   const eventId = req.query.eventId;
+
+  // Connect to MongoDB
+  const client = await MongoClient.connect(
+    // newsletter will be the name of the database
+    "mongodb+srv://mark05:A6815869193@project1.sbdoj8d.mongodb.net/events?retryWrites=true&w=majority"
+  );
 
   if (req.method === "POST") {
     const email = req.body.email;
@@ -7,7 +15,7 @@ function handler(req, res) {
     const text = req.body.text;
     if (
       !email ||
-      !email.include("@") ||
+      !email.includes("@") ||
       !name ||
       name.trim() === "" ||
       !text ||
@@ -18,11 +26,17 @@ function handler(req, res) {
     }
 
     const newComment = {
-      id: new Date().toISOString(),
       email,
       name,
       text,
+      eventId,
     };
+
+    const db = client.db();
+    const result = await db.collection("comments").insertOne(newComment);
+    newComment.id = result.insertedId;
+
+    console.log(result);
 
     res.status(201).json({ message: "Added comment.", comment: newComment });
   }
@@ -34,6 +48,8 @@ function handler(req, res) {
     ];
     res.status(200).json({ comments: dummyList });
   }
+
+  client.close();
 }
 
 export default handler;
